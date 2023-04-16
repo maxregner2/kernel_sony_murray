@@ -1,8 +1,3 @@
-/*
- * NOTE: This file has been modified by Sony Corporation.
- * Modifications are Copyright 2022 Sony Corporation,
- * and licensed under the license of the file.
- */
 // SPDX-License-Identifier: GPL-2.0-only
 /*
  * Copyright (c) 2017-2021, The Linux Foundation. All rights reserved.
@@ -140,7 +135,9 @@ struct geni_i2c_dev {
 	bool gpi_reset;
 	bool disable_dma_mode;
 	bool prev_cancel_pending; //Halt cancel till IOS in good state
-        bool is_i2c_rtl_based; /* doing pending cancel only for rtl based SE's */
+/*modify by zhouchenghua for baseline upgrade at 2022/7/6 start */
+	bool is_i2c_rtl_based; /* doing pending cancel only for rtl based SE's */
+/*modify by zhouchenghua for baseline upgrade at 2022/7/6 end */
 };
 
 static struct geni_i2c_dev *gi2c_dev_dbg[MAX_SE];
@@ -1007,9 +1004,11 @@ static int geni_i2c_gsi_xfer(struct i2c_adapter *adap, struct i2c_msg msgs[],
 
 			/* WAR: Set flag to mark cancel pending if IOS stuck */
 			geni_ios = geni_read_reg_nolog(gi2c->base, SE_GENI_IOS);
+/*modify by zhouchenghua for baseline upgrade at 2022/7/6 start */
 			if ((geni_ios & 0x3) != 0x3) { //SCL:b'1, SDA:b'0
 				GENI_SE_DBG(gi2c->ipcl, true, gi2c->dev,
 					"%s: IO lines not in good state\n", __func__);
+/*modify by zhouchenghua for baseline upgrade at 2022/7/6 end */
 					/* doing pending cancel only rtl based SE's */
 					if (gi2c->is_i2c_rtl_based) {
 						gi2c->prev_cancel_pending = true;
@@ -1101,7 +1100,9 @@ static int geni_i2c_xfer(struct i2c_adapter *adap,
 			pm_runtime_mark_last_busy(gi2c->dev);
 			pm_runtime_put_autosuspend(gi2c->dev);
 			return ret; //Don't perform xfer is cancel failed
-                }
+/*modify by zhouchenghua for baseline upgrade at 2022/7/6 start */
+		}
+/*modify by zhouchenghua for baseline upgrade at 2022/7/6 end */
 	}
 
 	GENI_SE_DBG(gi2c->ipcl, false, gi2c->dev,
@@ -1229,9 +1230,11 @@ static int geni_i2c_xfer(struct i2c_adapter *adap,
 
 			/* WAR: Set flag to mark cancel pending if IOS bad */
 			geni_ios = geni_read_reg_nolog(gi2c->base, SE_GENI_IOS);
+/*modify by zhouchenghua for baseline upgrade at 2022/7/6 start */
 			if ((geni_ios & 0x3) != 0x3) { //SCL:b'1, SDA:b'0
 				GENI_SE_DBG(gi2c->ipcl, true, gi2c->dev,
 					"%s: IO lines not in good state\n", __func__);
+/*modify by zhouchenghua for baseline upgrade at 2022/7/6 end */
 				/* doing pending cancel only rtl based SE's */
 				if (gi2c->is_i2c_rtl_based) {
 					gi2c->prev_cancel_pending = true;
@@ -1290,9 +1293,11 @@ geni_i2c_txn_ret:
 		pm_runtime_mark_last_busy(gi2c->dev);
 		pm_runtime_put_autosuspend(gi2c->dev);
 	}
+
 	gi2c->cur = NULL;
 	GENI_SE_DBG(gi2c->ipcl, false, gi2c->dev,
 		"i2c txn ret:%d, num:%d, err:%d\n", ret, num, gi2c->err);
+
 	if (gi2c->err)
 		return gi2c->err;
 	else

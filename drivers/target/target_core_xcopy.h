@@ -1,9 +1,4 @@
 /* SPDX-License-Identifier: GPL-2.0 */
-/*
- * NOTE: This file has been modified by Sony Corporation.
- * Modifications are Copyright 2021 Sony Corporation,
- * and licensed under the license of the file.
- */
 #include <target/target_core_base.h>
 
 #define XCOPY_HDR_LEN			16
@@ -46,6 +41,7 @@ struct xcopy_op {
 	struct xcopy_pt_cmd *src_pt_cmd;
 	struct xcopy_pt_cmd *dst_pt_cmd;
 
+	u32 xop_data_bytes;
 	u32 xop_data_nents;
 	struct scatterlist *xop_data_sg;
 	struct work_struct xop_work;

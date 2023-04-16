@@ -1,10 +1,5 @@
 /* SPDX-License-Identifier: GPL-2.0-or-later */
 /*
- * NOTE: This file has been modified by Sony Corporation.
- * Modifications are Copyright 2021 Sony Corporation,
- * and licensed under the license of the file.
- */
-/*
  * drivers/input/tablet/wacom_wac.h
  */
 #ifndef WACOM_WAC_H
@@ -305,6 +300,7 @@ struct hid_data {
 	bool tipswitch;
 	bool barrelswitch;
 	bool barrelswitch2;
+	bool confidence;
 	int x;
 	int y;
 	int pressure;

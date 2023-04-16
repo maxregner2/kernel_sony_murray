@@ -85,8 +85,10 @@ void teedev_ctx_put(struct tee_context *ctx)
 
 void teedev_close_context(struct tee_context *ctx)
 {
-	tee_device_put(ctx->teedev);
+	struct tee_device *teedev = ctx->teedev;
+
 	teedev_ctx_put(ctx);
+	tee_device_put(teedev);
 }
 EXPORT_SYMBOL_GPL(teedev_close_context);
 

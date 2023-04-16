@@ -19,11 +19,6 @@
  *	       Ariel Elior <ariel.elior@qlogic.com>
  *
  */
-/*
- * NOTE: This file has been modified by Sony Corporation.
- * Modifications are Copyright 2021 Sony Corporation,
- * and licensed under the license of the file.
- */
 #include "bnx2x.h"
 #include "bnx2x_init.h"
 #include "bnx2x_cmn.h"
@@ -1251,7 +1246,7 @@ int bnx2x_iov_init_one(struct bnx2x *bp, int int_mode_param,
 
 	/* SR-IOV capability was enabled but there are no VFs*/
 	if (iov->total == 0) {
-		err = -EINVAL;
+		err = 0;
 		goto failed;
 	}
 

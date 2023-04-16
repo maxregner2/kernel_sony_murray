@@ -1,8 +1,3 @@
-/*
- * NOTE: This file has been modified by Sony Corporation.
- * Modifications are Copyright 2021 Sony Corporation,
- * and licensed under the license of the file.
- */
 // SPDX-License-Identifier: GPL-2.0-only
 /**
  * drivers/net/ethernet/micrel/ksx884x.c - Micrel KSZ8841/2 PCI Ethernet driver
@@ -5698,7 +5693,7 @@ static void dev_set_promiscuous(struct net_device *dev, struct dev_priv *priv,
 		 * from the bridge.
 		 */
 		if ((hw->features & STP_SUPPORT) && !promiscuous &&
-		    (dev->priv_flags & IFF_BRIDGE_PORT)) {
+		    netif_is_bridge_port(dev)) {
 			struct ksz_switch *sw = hw->ksz_switch;
 			int port = priv->port.first_port;
 

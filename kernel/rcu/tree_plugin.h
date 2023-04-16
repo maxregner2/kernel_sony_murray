@@ -1,10 +1,5 @@
 /* SPDX-License-Identifier: GPL-2.0+ */
 /*
- * NOTE: This file has been modified by Sony Corporation.
- * Modifications are Copyright 2021 Sony Corporation,
- * and licensed under the license of the file.
- */
-/*
  * Read-Copy Update mechanism for mutual exclusion (tree-based version)
  * Internal non-public definitions that provide either classic
  * or preemptible semantics.
@@ -538,6 +533,7 @@ rcu_preempt_deferred_qs_irqrestore(struct task_struct *t, unsigned long flags)
 		/* Unboost if we were boosted. */
 		if (IS_ENABLED(CONFIG_RCU_BOOST) && drop_boost_mutex)
 			rt_mutex_futex_unlock(&rnp->boost_mtx);
+
 	} else {
 		local_irq_restore(flags);
 	}

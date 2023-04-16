@@ -322,8 +322,12 @@ int snd_soc_put_volsw(struct snd_kcontrol *kcontrol,
 		mask = BIT(sign_bit + 1) - 1;
 
 	val = ucontrol->value.integer.value[0];
-	if (mc->platform_max && ((int)val + min) > mc->platform_max)
+/*PDX225T code to resolve baseline conflicts by zhouchenghua at 2022/8/5 start*/
+ /*PDX225T code for SU6391A-11 by zhouchenghua at 2022/7/8 start*/
+	if (mc->platform_max &&((int)val + min) > mc->platform_max)
 		return -EINVAL;
+ /*PDX225T code for SU6391A-11 by zhouchenghua at 2022/7/8 end*/
+/*PDX225T code to resolve baseline conflicts by zhouchenghua at 2022/8/5 end*/
 	if (val > max - min)
 		return -EINVAL;
 	if (val < 0)
@@ -335,8 +339,13 @@ int snd_soc_put_volsw(struct snd_kcontrol *kcontrol,
 	val = val << shift;
 	if (snd_soc_volsw_is_stereo(mc)) {
 		val2 = ucontrol->value.integer.value[1];
+
+/*PDX225T code to resolve baseline conflicts by zhouchenghua at 2022/8/5 start*/
+ /*PDX225T code for SU6391A-11 by zhouchenghua at 2022/7/8 start*/
 		if (mc->platform_max && ((int)val2 + min) > mc->platform_max)
 			return -EINVAL;
+ /*PDX225T code for SU6391A-11 by zhouchenghua at 2022/7/8 end*/
+/*PDX225T code to resolve baseline conflicts by zhouchenghua at 2022/8/5 end*/
 		if (val2 > max - min)
 			return -EINVAL;
 		if (val2 < 0)
@@ -441,8 +450,15 @@ int snd_soc_put_volsw_sx(struct snd_kcontrol *kcontrol,
 	int err = 0;
 	unsigned int val, val_mask, val2 = 0;
 
+	val = ucontrol->value.integer.value[0];
+	if (mc->platform_max && val > mc->platform_max)
+		return -EINVAL;
+	if (val > max - min)
+		return -EINVAL;
+	if (val < 0)
+		return -EINVAL;
 	val_mask = mask << shift;
-	val = (ucontrol->value.integer.value[0] + min) & mask;
+	val = (val + min) & mask;
 	val = val << shift;
 
 	err = snd_soc_component_update_bits(component, reg, val_mask, val);
@@ -913,6 +929,8 @@ int snd_soc_put_xr_sx(struct snd_kcontrol *kcontrol,
 	unsigned int i, regval, regmask;
 	int err;
 
+	if (val < mc->min || val > mc->max)
+		return -EINVAL;
 	if (invert)
 		val = max - val;
 	val &= mask;

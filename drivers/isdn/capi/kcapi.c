@@ -9,11 +9,6 @@
  * of the GNU General Public License, incorporated herein by reference.
  *
  */
-/*
- * NOTE: This file has been modified by Sony Corporation.
- * Modifications are Copyright 2021 Sony Corporation,
- * and licensed under the license of the file.
- */
 
 #define AVMB1_COMPAT
 
@@ -569,6 +564,11 @@ int detach_capi_ctr(struct capi_ctr *ctr)
 	mutex_lock(&capi_controller_lock);
 
 	ctr_down(ctr, CAPI_CTR_DETACHED);
+
+	if (ctr->cnr < 1 || ctr->cnr - 1 >= CAPI_MAXCONTR) {
+		err = -EINVAL;
+		goto unlock_out;
+	}
 
 	if (capi_controller[ctr->cnr - 1] != ctr) {
 		err = -EINVAL;

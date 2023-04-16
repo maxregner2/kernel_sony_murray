@@ -929,7 +929,7 @@ int nfcc_hw_check(struct nfc_dev *nfc_dev)
 		__func__, nci_reset_rsp[0],
 		nci_reset_rsp[1], nci_reset_rsp[2]);
 
-	get_hardware_info_data(HWID_NFC,"0xA4");
+	//get_hardware_info_data(HWID_NFC,"0xA4");
 
 err_nfcc_reset_failed:
 	pr_info("NFC chip_type = %x\n",

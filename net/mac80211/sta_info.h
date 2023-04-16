@@ -1,10 +1,5 @@
 /* SPDX-License-Identifier: GPL-2.0-only */
 /*
- * NOTE: This file has been modified by Sony Corporation.
- * Modifications are Copyright 2021 Sony Corporation,
- * and licensed under the license of the file.
- */
-/*
  * Copyright 2002-2005, Devicescape Software, Inc.
  * Copyright 2013-2014  Intel Mobile Communications GmbH
  * Copyright(c) 2015-2017 Intel Deutschland GmbH
@@ -185,6 +180,7 @@ struct tid_ampdu_tx {
 	u8 stop_initiator;
 	bool tx_stop;
 	u16 buf_size;
+	u16 ssn;
 
 	u16 failed_bar_ssn;
 	bool bar_pending;

@@ -1,8 +1,3 @@
-/*
- * NOTE: This file has been modified by Sony Corporation.
- * Modifications are Copyright 2021 Sony Corporation,
- * and licensed under the license of the file.
- */
 // SPDX-License-Identifier: GPL-2.0-only
 /*
  * Copyright (c) 2020-2021, The Linux Foundation. All rights reserved.
@@ -650,14 +645,14 @@ void *hh_rm_call(hh_rm_msgid_t message_id,
 			     connection->recv_buff, connection->recv_buff_size,
 			     false);
 
-	mutex_lock(&hh_rm_call_idr_lock);
-	idr_remove(&hh_rm_call_idr, connection->seq);
-	mutex_unlock(&hh_rm_call_idr_lock);
-
 	ret = connection->recv_buff;
 	*resp_buff_size = connection->recv_buff_size;
 
 out:
+	mutex_lock(&hh_rm_call_idr_lock);
+	idr_remove(&hh_rm_call_idr, connection->seq);
+	mutex_unlock(&hh_rm_call_idr_lock);
+
 	kfree(connection);
 	return ret;
 }

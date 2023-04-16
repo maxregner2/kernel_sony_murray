@@ -1,10 +1,5 @@
 /* SPDX-License-Identifier: GPL-2.0-or-later */
 /*
- * NOTE: This file has been modified by Sony Corporation.
- * Modifications are Copyright 2021 Sony Corporation,
- * and licensed under the license of the file.
- */
-/*
  * INET		An implementation of the TCP/IP protocol suite for the LINUX
  *		operating system.  INET is implemented using the  BSD Socket
  *		interface as the means of communication with the user level.
@@ -477,8 +472,14 @@ struct sock {
 	u32			sk_ack_backlog;
 	u32			sk_max_ack_backlog;
 	kuid_t			sk_uid;
+#if IS_ENABLED(CONFIG_DEBUG_SPINLOCK) || IS_ENABLED(CONFIG_DEBUG_LOCK_ALLOC)
+	spinlock_t		sk_peer_lock;
+#else
+	/* sk_peer_lock is in the ANDROID_KABI_RESERVE(1) field below */
+#endif
 	struct pid		*sk_peer_pid;
 	const struct cred	*sk_peer_cred;
+
 	long			sk_rcvtimeo;
 	ktime_t			sk_stamp;
 #if BITS_PER_LONG==32
@@ -519,7 +520,11 @@ struct sock {
 #endif
 	struct rcu_head		sk_rcu;
 
+#if IS_ENABLED(CONFIG_DEBUG_SPINLOCK) || IS_ENABLED(CONFIG_DEBUG_LOCK_ALLOC)
 	ANDROID_KABI_RESERVE(1);
+#else
+	ANDROID_KABI_USE(1, spinlock_t sk_peer_lock);
+#endif
 	ANDROID_KABI_RESERVE(2);
 	ANDROID_KABI_RESERVE(3);
 	ANDROID_KABI_RESERVE(4);

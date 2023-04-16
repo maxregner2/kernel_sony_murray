@@ -366,6 +366,8 @@ int nfc_i2c_dev_probe(struct i2c_client *client, const struct i2c_device_id *id)
 		goto err_ldo_config_failed;
 	}
 
+        usleep_range(10000, 11000);
+
 	ret = nfcc_hw_check(nfc_dev);
 	/*if (ret) {
 		pr_err("nfc hw check failed ret %d\n", ret);

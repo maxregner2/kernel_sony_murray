@@ -10,11 +10,6 @@
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
  */
-/*
- * NOTE: This file has been modified by Sony Corporation.
- * Modifications are Copyright 2021 Sony Corporation,
- * and licensed under the license of the file.
- */
 
 #ifndef __HARDWARE_INFO_H__
 #define __HARDWARE_INFO_H__
@@ -110,6 +105,7 @@ enum hardware_id {
 	HWID_CHARGER,
 // add for batt id adc voltage hardware info add begin
 	HWID_BATERY_ID_ADC,
+	HWID_BATERY_ID_OHM,
 // add for batt id adc voltage hardware info add end
 
 	HWID_USB_TYPE_C = 0xE0,
@@ -171,6 +167,7 @@ typedef struct {
 	const char *bat_id;
 // add for batt id adc voltage hardware info add begin
 	int *bat_id_adc;
+	int *bat_id_ohm;
 // add for batt id adc voltage hardware info add end
 	const unsigned int *flash;
 	const char *nfc;

@@ -20,11 +20,6 @@
  * HUAQIN FOR SUCH HUAQIN SOFTWARE AT ISSUE.
  *
  */
-/*
- * NOTE: This file has been modified by Sony Corporation.
- * Modifications are Copyright 2022 Sony Corporation,
- * and licensed under the license of the file.
- */
 
 /*******************************************************************************
 * Dependency
@@ -232,6 +227,9 @@ void get_hardware_info_data(enum hardware_id id, const void *data)
 			break;
 		case HWID_BATERY_ID_ADC:
 			hwinfo_data.bat_id_adc = (int *)data;
+			break;
+		case HWID_BATERY_ID_OHM:
+			hwinfo_data.bat_id_ohm = (int *)data;
 			break;
 		default:
 			hwinfo_debug("[HWINFO] %s Invalid HWID\n", __func__);
@@ -1101,6 +1099,17 @@ static ssize_t show_bat_id_adc(struct device *dev,
 	}
 }
 
+static ssize_t show_bat_id_ohm(struct device *dev,
+			       struct device_attribute *attr, char *buf)
+{
+	if (NULL != hwinfo_data.bat_id_ohm) {
+		return sprintf(buf, "bat_id_ohm :%d\n",
+			       *hwinfo_data.bat_id_ohm);
+	} else {
+		return sprintf(buf, "bat_id_ohm voltage :Not found\n");
+	}
+}
+
 static ssize_t show_nfc(struct device *dev, struct device_attribute *attr,
 			char *buf)
 {
@@ -1278,6 +1287,7 @@ static DEVICE_ATTR(sim2_card_slot_status, 0444, show_sim2_card_slot_status,
 		   NULL);
 static DEVICE_ATTR(smartpa, 0444, show_smartpa_type, NULL);
 static DEVICE_ATTR(bat_id_adc, 0444, show_bat_id_adc, NULL);
+static DEVICE_ATTR(bat_id_ohm, 0444, show_bat_id_ohm, NULL);
 static DEVICE_ATTR(ufs_product_name, 0444, show_ufs_product_name, NULL);
 static DEVICE_ATTR(ufs_product_revision, 0444, show_ufs_product_revision, NULL);
 
@@ -1329,6 +1339,7 @@ static struct attribute *hdinfo_attributes[] = {
 	&dev_attr_sim2_card_slot_status.attr,
 	&dev_attr_smartpa.attr,
 	&dev_attr_bat_id_adc.attr,
+	&dev_attr_bat_id_ohm.attr,
 	&dev_attr_ufs_product_name.attr,
 	&dev_attr_ufs_product_revision.attr,
 	NULL
