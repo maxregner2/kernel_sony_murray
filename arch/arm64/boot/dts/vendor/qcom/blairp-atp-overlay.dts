@@ -1,12 +1,12 @@
 /dts-v1/;
 /plugin/;
 
-#include "blair-atp.dtsi"
+#include "blairp-atp.dtsi"
 
 / {
-	model = "Qualcomm Technologies, Inc. Blair ATP";
-	compatible = "qcom,blair-atp", "qcom,blair", "qcom,atp";
-	qcom,msm-id = <507 0x10000>, <578 0x10000>;
+	model = "Qualcomm Technologies, Inc. Blairp ATP";
+	compatible = "qcom,blairp-atp", "qcom,blairp", "qcom,atp";
+	qcom,msm-id = <565 0x10000>;
 	qcom,board-id = <33 0>;
 };
 
