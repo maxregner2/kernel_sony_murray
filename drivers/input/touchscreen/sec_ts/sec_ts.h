@@ -647,6 +647,7 @@ struct sec_ts_data {
 	struct mutex i2c_mutex;
 	struct mutex eventlock;
 	struct mutex modechange;
+	struct mutex irq_mutex;
 
 	struct delayed_work work_read_info;
 #ifdef USE_POWER_RESET_WORK
