@@ -658,9 +658,10 @@ static int cam_ois_pkt_parse(struct cam_ois_ctrl_t *o_ctrl, void *arg)
 		}
 
         rc = dw9781_download_ois_fw(o_ctrl);
+        /* we need avoid ois driver return positive , this is a ioctl control*/
         if(rc < 0){
             CAM_ERR(CAM_OIS,
-                    "Fail to download dw9781 ois fw");
+                    "Fail to download dw9781 ois fw, rc is %d", rc);
             goto pwr_dwn;
         }
 

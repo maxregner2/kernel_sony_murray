@@ -207,7 +207,7 @@ void GenerateFirmwareContexts(void)
 
 int dw9781_download_ois_fw(struct cam_ois_ctrl_t *o_ctrl)
 {
-	unsigned char ret = ADJ_OK;
+	int ret = ADJ_OK;
 	uint8_t first_chip_id[2];
 	unsigned short fwchecksum = 0;
 	uint8_t fw_version_current[2];
@@ -234,6 +234,14 @@ int dw9781_download_ois_fw(struct cam_ois_ctrl_t *o_ctrl)
 	ois_printf("[dw9781_download_ois_fw] first_chip_id : 0x%02x 0x%02x\r\n", first_chip_id[0], first_chip_id[1]);
 
     GenerateFirmwareContexts();
+
+	if (true) {
+		ois_printf("[dw9781_download_ois_fw] force skip ois fw to upgrade");
+		ois_reset();
+		kfree(ois_setting);
+		return ADJ_OK;
+	}
+
 	if ((first_chip_id[0] << 8 | first_chip_id[1]) != DW9781_CHIP_ID) { /* first_chip_id verification failed */
 		ois_printf("[dw9781_download_ois_fw] dw9781 1st chip id failed, will download fw force\r\n");
 		g_downloadByForce = 1;
@@ -260,11 +268,17 @@ int dw9781_download_ois_fw(struct cam_ois_ctrl_t *o_ctrl)
 		ois_printf("[dw9781_download_ois_fw] firmware download finished\r\n");
 
 		if (ret != ADJ_OK) {
-			erase_mtp_rewritefw();
-			write_reg_16bit_value_16bit(0xd000, 0x0000, 0); /* Shut download mode */
-			ois_printf("[dw9781_download_ois_fw] firmware download error, ret = 0x%x\r\n", ret);
-			ois_printf("[dw9781_download_ois_fw] change dw9781c state to shutdown mode\r\n");
-			return ERROR_FW_VERIFY;
+                        /* if ois fw download fail, download again */
+			ois_printf("[dw9781_download_ois_fw] first download ois fw fail, we need to download again\r\n");
+                        ret = download_fw();
+                        if(ret != ADJ_OK) {
+			        erase_mtp_rewritefw();
+			        write_reg_16bit_value_16bit(0xd000, 0x0000, 0); /* Shut download mode */
+			        ois_printf("[dw9781_download_ois_fw] firmware 2nd download error, ret = 0x%x\r\n", ret);
+			        ois_printf("[dw9781_download_ois_fw] change dw9781c state to shutdown mode\r\n");
+                        } else {
+			        ois_printf("[dw9781_download_ois_fw] firmware 2nd download success\r\n");
+                        }
 		} else {
 			ois_printf("[dw9781_download_ois_fw] firmware download success\r\n");
 		}
@@ -280,7 +294,8 @@ EXPORT_SYMBOL(dw9781_download_ois_fw);
 
 int download_fw(void)
 {
-	unsigned char ret = ADJ_OK;
+	int ret = ADJ_OK;
+        unsigned short fwchecksum = 0;
 	//unsigned short i;
     //int count = 0;
     /* chip enable */
@@ -321,8 +336,15 @@ buf_temp[2 * i + 8], buf_temp[2 * i + 9],buf_temp[2 * i + 10 ], buf_temp[2 * i +
 	}*/
 
 	//ois_printf("[dw9781_download_fw] firmware verification pass, count %d \r\n", count);
-	ois_printf("[dw9781_download_fw] firmware verification pass\r\n");
-	ois_printf("[dw9781_download_fw] firmware download success\r\n");
+
+        /*reset after download fw*/
+        ois_reset();
+        fwchecksum = fw_checksum_verify();
+        if(fwchecksum != *(g_firmwareContext.fwContentPtr+10234)) {
+                ret = ERROR_FW_VERIFY;
+        } else {
+                ois_printf("[dw9781_download_fw] firmware verification pass");
+        }
 
 	return ret;
 }
