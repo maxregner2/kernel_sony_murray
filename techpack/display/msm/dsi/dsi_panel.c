@@ -396,9 +396,11 @@ static int dsi_panel_power_off(struct dsi_panel *panel)
 	if (spec_pdata->hbm_mode > 0)
 		spec_pdata->hbm_mode = 0;
 
+/*modify by zhouchenghua for baseline upgrade at 2022/7/6 start */
         printk("[lcm] power off+++\n");
 
 	if (panel->is_twm_en || panel->skip_panel_off) {
+/*modify by zhouchenghua for baseline upgrade at 2022/7/6 end */
 		DSI_DEBUG("TWM Enabled, skip panel power off\n");
 		return rc;
 	}
