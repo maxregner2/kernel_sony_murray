@@ -5,6 +5,5 @@ obj-y	+= bu520x1nvx/
 obj-y	+= last_logs/
 obj-y	+= ldo_vibrator/
 obj-y	+= powerkey_forcecrash/
-obj-y	+= sec_ts/
 obj-y += sn1x0_i2c/
 obj-y += sn1x0_spi/
